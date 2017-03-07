@@ -18,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private final static String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_INDEX2 = "index2";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Question[] mQuestionBank = {
@@ -64,6 +65,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_INDEX,mCurrentIndex);
+        outState.putBoolean(KEY_INDEX2,mIsCheater);
         super.onSaveInstanceState(outState);
         Log.d(TAG,"============ onSaveInstanceState =========== ");
     }
@@ -77,6 +79,7 @@ public class QuizActivity extends AppCompatActivity {
         if (savedInstanceState!=null){
             Log.d(TAG,"============  savedInstanceState!=null =========== ");
             mCurrentIndex=savedInstanceState.getInt(KEY_INDEX,0);
+            mIsCheater=savedInstanceState.getBoolean(KEY_INDEX2,false);
         }
 
 
