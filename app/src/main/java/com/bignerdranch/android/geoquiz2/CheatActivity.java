@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 public class CheatActivity extends AppCompatActivity {
 
+    /* Training 2017-03-07 */
     private static final String EXTRA_ANSWER_IS_TRUE =
             "com.bignerdranch.android.geoquiz2.answer_is_true";
 
