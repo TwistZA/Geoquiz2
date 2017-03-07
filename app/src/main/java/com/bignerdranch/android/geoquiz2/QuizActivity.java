@@ -1,7 +1,6 @@
 package com.bignerdranch.android.geoquiz2;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
@@ -22,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private final static String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     private Question[] mQuestionBank = {
             new Question(R.string.question_oceans, true),
@@ -32,6 +29,7 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex=0;
+    private boolean mIsCheater =false;
 
     @Override
     protected void onStop() {
@@ -92,6 +90,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length;
+                mIsCheater=false;
                 updateQuestion();
             }
         });
@@ -119,12 +118,23 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i=CheatActivity.newIntent(QuizActivity.this,mQuestionBank[mCurrentIndex].isAnswerTrue());
-                startActivity(i);
+                startActivityForResult(i,REQUEST_CODE_CHEAT);
             }
         });
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==REQUEST_CODE_CHEAT){
+            if (resultCode==RESULT_OK){
+                mIsCheater =CheatActivity.wasAnswerShown(data);
+            }
+            else if (resultCode==RESULT_CANCELED){
+                mIsCheater =false;
+            }
+        }
+    }
 
 
 
@@ -135,6 +145,11 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(boolean userPressedTrue){
+
+        if (mIsCheater){
+            Toast.makeText(QuizActivity.this,R.string.judgment_toast,Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (userPressedTrue == mQuestionBank[mCurrentIndex].isAnswerTrue()){
             Toast.makeText(QuizActivity.this,R.string.toast_correct,Toast.LENGTH_SHORT).show();
