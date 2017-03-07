@@ -137,7 +137,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-
+    /* Branched for challenge */
 
     private void updateQuestion(){
         int question = mQuestionBank[mCurrentIndex].getTextResId();
