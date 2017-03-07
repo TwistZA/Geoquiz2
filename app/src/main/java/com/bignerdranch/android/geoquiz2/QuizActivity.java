@@ -30,7 +30,7 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex=0;
-    private boolean mIsCheater =false;
+    private boolean mIsCheater[] = new boolean[mQuestionBank.length];
 
     @Override
     protected void onStop() {
@@ -65,7 +65,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_INDEX,mCurrentIndex);
-        outState.putBoolean(KEY_INDEX2,mIsCheater);
+        outState.putBoolean(KEY_INDEX2,mIsCheater[mCurrentIndex]);
         super.onSaveInstanceState(outState);
         Log.d(TAG,"============ onSaveInstanceState =========== ");
     }
@@ -79,7 +79,7 @@ public class QuizActivity extends AppCompatActivity {
         if (savedInstanceState!=null){
             Log.d(TAG,"============  savedInstanceState!=null =========== ");
             mCurrentIndex=savedInstanceState.getInt(KEY_INDEX,0);
-            mIsCheater=savedInstanceState.getBoolean(KEY_INDEX2,false);
+            mIsCheater[mCurrentIndex]=savedInstanceState.getBoolean(KEY_INDEX2,false);
         }
 
 
@@ -93,7 +93,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex+1) % mQuestionBank.length;
-                mIsCheater=false;
+                mIsCheater[mCurrentIndex]=false;
                 updateQuestion();
             }
         });
@@ -131,10 +131,10 @@ public class QuizActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==REQUEST_CODE_CHEAT){
             if (resultCode==RESULT_OK){
-                mIsCheater =CheatActivity.wasAnswerShown(data);
+                mIsCheater[mCurrentIndex] =CheatActivity.wasAnswerShown(data);
             }
             else if (resultCode==RESULT_CANCELED){
-                mIsCheater =false;
+                mIsCheater[mCurrentIndex] =false;
             }
         }
     }
@@ -149,7 +149,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue){
 
-        if (mIsCheater){
+        if (mIsCheater[mCurrentIndex]){
             Toast.makeText(QuizActivity.this,R.string.judgment_toast,Toast.LENGTH_SHORT).show();
             return;
         }
