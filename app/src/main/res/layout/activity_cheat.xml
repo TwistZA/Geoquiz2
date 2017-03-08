@@ -32,6 +32,9 @@
         android:id="@+id/api_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/activity_vertical_margin"
+        android:typeface="serif"
         android:padding="24dp"
         tools:text="API"/>
 </LinearLayout>
