@@ -1,14 +1,19 @@
 package com.bignerdranch.android.geoquiz2;
 
-import android.app.Activity;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+
+import static android.os.Build.*;
 
 public class CheatActivity extends AppCompatActivity {
 
@@ -22,8 +27,11 @@ public class CheatActivity extends AppCompatActivity {
 
     private boolean mAnswerIsTrue;
     private boolean mAnswerWasShown=false;
-    private Button mShowAnswerButton;
+    private Button mShowAnswer;
+    private Button mShowAPI;
     private TextView mAnswerTextView;
+    private TextView mAPITextView;
+
 
 
 
@@ -54,9 +62,19 @@ public class CheatActivity extends AppCompatActivity {
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE,false);
 
         mAnswerTextView = (TextView) findViewById(R.id.answer_text_view);
+        mAPITextView = (TextView) findViewById(R.id.api_text_view);
 
-        mShowAnswerButton = (Button) findViewById(R.id.show_answer_button);
-        mShowAnswerButton.setOnClickListener(new View.OnClickListener() {
+        mShowAPI = (Button) findViewById(R.id.show_api_button);
+        mShowAPI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int version = VERSION.SDK_INT;
+                mAPITextView.setText("API Level "+Integer.toString(version));
+            }
+        });
+
+        mShowAnswer = (Button) findViewById(R.id.show_answer_button);
+        mShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAnswerIsTrue){
@@ -68,6 +86,28 @@ public class CheatActivity extends AppCompatActivity {
 
                 mAnswerWasShown=true;
                 setAnswerShownResult(mAnswerWasShown);
+
+                if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                    int cx = mShowAnswer.getWidth() / 2;
+                    int cy = mShowAnswer.getHeight() / 2;
+                    float radius = mShowAnswer.getWidth();
+                    Animator anim = ViewAnimationUtils
+                            .createCircularReveal(mShowAnswer, cx, cy, radius, 0);
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mAnswerTextView.setVisibility(View.VISIBLE);
+                            mShowAnswer.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    anim.start();
+                } else {
+                    mAnswerTextView.setVisibility(View.VISIBLE);
+                    mShowAnswer.setVisibility(View.INVISIBLE);
+                }
+
+
             }
         });
     }

@@ -17,9 +17,21 @@
         android:layout_height="wrap_content"
         android:padding="24dp"
         tools:text="Answer"/>
+
     <Button
         android:id="@+id/show_answer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/show_answer_button"/>
+    <Button
+        android:id="@+id/show_api_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_api_button"/>
+    <TextView
+        android:id="@+id/api_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        tools:text="API"/>
 </LinearLayout>
